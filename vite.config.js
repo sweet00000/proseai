@@ -1,8 +1,9 @@
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  base: '/proseai/',   // GitHub Pages repo subpath
+  base: '/proseai/',
   build: {
+    target: 'esnext',  // required for top-level await + transformers.js
     outDir: 'dist',
     rollupOptions: {
       input: {
