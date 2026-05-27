@@ -1,5 +1,22 @@
 # ProseAI — TODO
 
+> Full pro architecture in **PLAN-PRO.md** — credits, Stripe, Lambda, river map, dashboard.
+
+---
+
+## 🚀 Future: Pro Tier (see PLAN-PRO.md for full spec)
+
+- [ ] **Auth** — Clerk magic link + Google OAuth
+- [ ] **Credit wallet** — DynamoDB, atomic decrement, 402 on empty
+- [ ] **Gemini backend** — Lambda proxy keeps API key server-side, writing-shaped system prompt
+- [ ] **Stripe** — Checkout sessions, webhook → add credits (verify sig or credit fraud)
+- [ ] **River progression map** — SVG stepping stones up cartoon river, skill tracks by color
+- [ ] **Dashboard** — writing score sparkline, skill radar, streak heatmap, credit balance
+- [ ] **Monthly sub** — EventBridge cron refreshes 200 credits/mo
+- [ ] **Low-credit email** — SES alert at < 5 credits remaining
+
+---
+
 ## 🔥 P0 — Blockers (do first)
 
 - [ ] Test full load → lesson → feedback flow in browser (`npm run dev`)
