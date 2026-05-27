@@ -7,8 +7,9 @@ import {
   nextLesson, level,
 } from './lessons.js'
 
-// BASE_URL = '/' locally, '/proseai/' on GitHub Pages (set in vite.config.js)
-const lessonsData = await fetch(`${import.meta.env.BASE_URL}data/lessons.json`).then(r => r.json())
+// import.meta.env?.BASE_URL = '/proseai/' via Vite build, undefined in raw browser → './'
+const BASE = import.meta.env?.BASE_URL ?? './'
+const lessonsData = await fetch(`${BASE}data/lessons.json`).then(r => r.json())
 const lessons = lessonsData.lessons
 
 let state = loadState()
