@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ProseAI Pro</title>
+  <link rel="stylesheet" href="./styles/pro.css"/>
+  <script type="importmap">
+  {
+    "imports": {
+      "@huggingface/transformers": "https://esm.sh/@huggingface/transformers@3"
+    }
+  }
+  </script>
+</head>
+<body>
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="logo">ProseAI <span style="-webkit-text-fill-color:#f472b6">Pro</span></div>
+    <div class="topbar-stats">
+      <div class="stat-pill" id="streak-pill">🔥 <span id="streak-val">0</span></div>
+      <div class="stat-pill" id="credits-pill" style="cursor:pointer">
+        ⚡ <span id="credits-val">–</span> credits
+      </div>
+      <button class="btn-buy" id="buy-btn">Buy Credits</button>
+    </div>
+  </div>
+
+  <!-- TAB BAR -->
+  <div class="tab-bar">
+    <button class="tab active" data-view="river">🏞 Journey</button>
+    <button class="tab" data-view="dashboard">📊 Dashboard</button>
+  </div>
+
+  <!-- GATE SCREEN (shown when not logged in) -->
+  <div id="gate-screen" class="gate-screen" style="display:none;">
+    <div style="font-size:3rem;">✍️</div>
+    <h2>Start your writing journey</h2>
+    <p>Buy credits to unlock AI-powered feedback from Gemini. One credit = one coaching session.</p>
+    <button class="btn-start" id="gate-buy-btn">Get Started →</button>
+    <p style="font-size:0.78rem; color:var(--muted);">Already bought? <a href="#" id="resend-link" style="color:var(--plum);">Restore access</a></p>
+  </div>
+
+  <!-- MAIN APP (shown when logged in) -->
+  <div id="app-main" style="display:none;">
+
+    <!-- RIVER VIEW -->
+    <div class="view active" id="view-river">
+      <div class="river-view">
+        <div id="river-container"></div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD VIEW -->
+    <div class="view" id="view-dashboard">
+      <div class="dashboard-view">
+        <div class="dash-grid">
+          <div class="dash-card">
+            <div class="dash-label">Writing Score</div>
+            <div class="dash-value" id="dash-score">–</div>
+            <div class="dash-sub">avg last 10 lessons</div>
+          </div>
+          <div class="dash-card">
+            <div class="dash-label">Streak</div>
+            <div class="dash-value" id="dash-streak">0 🔥</div>
+            <div class="dash-sub">days in a row</div>
+          </div>
+          <div class="dash-card">
+            <div class="dash-label">Credits Used</div>
+            <div class="dash-value" id="dash-used">0</div>
+            <div class="dash-sub">total sessions</div>
+          </div>
+          <div class="dash-card">
+            <div class="dash-label">Credits Left</div>
+            <div class="dash-value" id="dash-balance">0</div>
+            <div class="dash-sub"><button class="btn-buy" id="dash-buy-btn" style="font-size:0.72rem; padding:4px 12px;">Buy more</button></div>
+          </div>
+          <div class="dash-card wide" id="dash-lessons-done">
+            <div class="dash-label">Lessons Completed</div>
+            <div class="dash-value" id="dash-completed">0</div>
+            <div class="dash-sub">of <span id="dash-total">0</span> lessons</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- LESSON PANEL (slides up from bottom) -->
+  <div class="lesson-panel" id="lesson-panel">
+    <div class="panel-handle"></div>
+    <div class="panel-skill-badge" id="panel-skill">✍️ Skill</div>
+    <div class="panel-prompt" id="panel-prompt"></div>
+
+    <textarea id="panel-input" placeholder="Write your rewrite here..." rows="4"></textarea>
+
+    <div id="panel-feedback" style="display:none;">
+      <div class="feedback-box">
+        <div class="feedback-label">🤖 AI Feedback</div>
+        <div class="thinking" id="panel-thinking"><span></span><span></span><span></span></div>
+        <div class="feedback-text" id="panel-feedback-text" style="display:none;"></div>
+      </div>
+      <div id="panel-xp" class="xp-toast" style="display:none;"></div>
+    </div>
+
+    <div class="panel-actions">
+      <button class="btn btn-ghost" id="panel-close">Close</button>
+      <button class="btn btn-primary" id="panel-submit">Get Feedback →</button>
+    </div>
+  </div>
+
+  <script type="module">
+    import { isLoggedIn, fetchMe, fetchFeedback, activate, logout } from './src/pro/api.js'
+    import { renderRiver } from './src/pro/river.js'
+    import { showBuyModal } from './src/pro/buy-modal.js'
+    import {
+      loadState, saveState, updateStreak, awardXP,
+      recordScore, writingScore, nextLesson, level,
+    } from './src/lessons.js'
+
+    const BASE = import.meta?.env?.BASE_URL ?? './'
+    const lessonsData = await fetch(`${BASE}data/lessons.json`).then(r => r.json())
+    const lessons = lessonsData.lessons
+    let state = loadState()
+    let me = null
+    let currentLesson = null
+
+    // ── DOM ──
+    const gate     = document.getElementById('gate-screen')
+    const appMain  = document.getElementById('app-main')
+    const panel    = document.getElementById('lesson-panel')
+    const creditsPill = document.getElementById('credits-pill')
+
+    // ── init ──
+    const params = new URLSearchParams(location.search)
+    if (params.get('session_id')) {
+      // returning from Stripe — activate
+      const { activate: activateFn } = await import('./src/pro/api.js')
+      try {
+        await activateFn(params.get('session_id'))
+        history.replaceState({}, '', location.pathname)
+      } catch (e) {
+        console.error('Activation failed:', e)
+      }
+    }
+
+    async function boot() {
+      if (!isLoggedIn()) {
+        gate.style.display = 'flex'
+        appMain.style.display = 'none'
+        return
+      }
+
+      me = await fetchMe()
+      if (!me) {
+        gate.style.display = 'flex'
+        appMain.style.display = 'none'
+        return
+      }
+
+      gate.style.display = 'none'
+      appMain.style.display = 'block'
+      refreshStats()
+      renderRiverMap()
+      refreshDashboard()
+    }
+
+    function refreshStats() {
+      if (!me) return
+      document.getElementById('streak-val').textContent = state.streak
+      document.getElementById('credits-val').textContent = me.balance
+      document.getElementById('dash-balance').textContent = me.balance
+      document.getElementById('dash-used').textContent = me.totalUsed
+      creditsPill.classList.toggle('credits-low', me.balance < 5)
+    }
+
+    function refreshDashboard() {
+      const ws = writingScore(state)
+      document.getElementById('dash-score').textContent = ws || '–'
+      document.getElementById('dash-streak').textContent = `${state.streak} 🔥`
+      document.getElementById('dash-completed').textContent = state.completedIds.length
+      document.getElementById('dash-total').textContent = lessons.length
+    }
+
+    function renderRiverMap() {
+      const container = document.getElementById('river-container')
+      const idx = state.currentIndex % lessons.length
+      renderRiver(container, lessons, state.completedIds, idx)
+
+      container.addEventListener('stone-click', ({ detail }) => {
+        openPanel(detail.lesson)
+      })
+    }
+
+    // ── lesson panel ──
+    function openPanel(lesson) {
+      currentLesson = lesson
+      document.getElementById('panel-skill').textContent = `✍️ ${lesson.skill}`
+      document.getElementById('panel-prompt').textContent = lesson.prompt
+      document.getElementById('panel-input').value = ''
+      document.getElementById('panel-feedback').style.display = 'none'
+      document.getElementById('panel-submit').disabled = false
+      panel.classList.add('open')
+      setTimeout(() => document.getElementById('panel-input').focus(), 350)
+    }
+
+    document.getElementById('panel-close').onclick = () => panel.classList.remove('open')
+
+    document.getElementById('panel-submit').addEventListener('click', async () => {
+      const text = document.getElementById('panel-input').value.trim()
+      if (!text || text.length < 8) return
+
+      const submitBtn = document.getElementById('panel-submit')
+      submitBtn.disabled = true
+
+      const feedbackEl = document.getElementById('panel-feedback')
+      const thinking   = document.getElementById('panel-thinking')
+      const fbText     = document.getElementById('panel-feedback-text')
+      const xpToast    = document.getElementById('panel-xp')
+
+      feedbackEl.style.display = 'block'
+      thinking.style.display = 'flex'
+      fbText.style.display = 'none'
+      xpToast.style.display = 'none'
+
+      try {
+        const result = await fetchFeedback({
+          userText: text,
+          skill: currentLesson.skill,
+          tip: currentLesson.tip,
+        })
+
+        thinking.style.display = 'none'
+        fbText.textContent = result.feedback
+        fbText.style.display = 'block'
+
+        // update credits
+        me.balance = result.creditsRemaining
+        me.totalUsed = (me.totalUsed || 0) + 1
+        refreshStats()
+
+        // gamification
+        const score = scoreRewrite(text, currentLesson)
+        state = updateStreak(state)
+        state = awardXP(state, score)
+        state = recordScore(state, score)
+        state.completedIds = [...new Set([...state.completedIds, currentLesson.id])]
+        state.currentIndex = (state.currentIndex + 1) % lessons.length
+        saveState(state)
+
+        const earned = score > 70 ? 15 : 10
+        const lvl = level(state.xp)
+        xpToast.textContent = `⚡ +${earned} XP · Score: ${score}/100 · ${lvl.name}`
+        xpToast.style.display = 'inline-flex'
+
+        refreshDashboard()
+        renderRiverMap()
+
+      } catch (err) {
+        thinking.style.display = 'none'
+        if (err.message === 'no_credits') {
+          panel.classList.remove('open')
+          showBuyModal()
+          return
+        }
+        fbText.textContent = `Error: ${err.message}`
+        fbText.style.display = 'block'
+      } finally {
+        submitBtn.disabled = false
+      }
+    })
+
+    // ── tabs ──
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab, .view').forEach(el => el.classList.remove('active'))
+        tab.classList.add('active')
+        document.getElementById(`view-${tab.dataset.view}`).classList.add('active')
+      })
+    })
+
+    // ── buy buttons ──
+    ;['buy-btn', 'dash-buy-btn', 'gate-buy-btn', 'credits-pill'].forEach(id => {
+      const el = document.getElementById(id)
+      if (el) el.onclick = () => showBuyModal()
+    })
+
+    // ── score heuristic (same as free tier) ──
+    const HEDGES = ['basically','kind of','i think','sort of','very ','really ','just ','actually ','a lot of','there are','in order to','due to the fact']
+    function scoreRewrite(userText, lesson) {
+      const lower = userText.toLowerCase()
+      const origLower = lesson.bad_example.toLowerCase()
+      if (userText.length < 10) return 0
+      let score = 30
+      const origHedges = HEDGES.filter(h => origLower.includes(h)).length
+      const userHedges  = HEDGES.filter(h => lower.includes(h)).length
+      score += origHedges > 0 ? Math.round(((origHedges - userHedges) / origHedges) * 40) : 20
+      const origWords = origLower.split(/\s+/).length
+      const userWords  = lower.split(/\s+/).length
+      if (userWords < origWords && userWords > 3) score += Math.round(Math.min(30, ((origWords - userWords) / origWords) * 55))
+      return Math.min(100, Math.max(0, score))
+    }
+
+    boot()
+  </script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./coi-serviceworker.js')
+    }
+  </script>
+</body>
+</html>

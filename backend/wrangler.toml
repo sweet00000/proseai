@@ -1,0 +1,22 @@
+name = "proseai-api"
+main = "src/index.js"
+compatibility_date = "2025-01-01"
+compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "proseai"
+database_id = "REPLACE_AFTER_RUNNING_wrangler_d1_create_proseai"
+
+[vars]
+FRONTEND_URL = "https://sweet00000.github.io/proseai"
+
+# Set secrets (never commit these):
+#   wrangler secret put GEMINI_API_KEY
+#   wrangler secret put STRIPE_SECRET_KEY
+#   wrangler secret put STRIPE_WEBHOOK_SECRET
+#   wrangler secret put JWT_SECRET          (run: openssl rand -hex 32)
+
+[[routes]]
+pattern = "proseai-api.YOUR_SUBDOMAIN.workers.dev/*"
+zone_name = ""
