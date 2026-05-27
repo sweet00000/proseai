@@ -1,0 +1,357 @@
+/* ProseAI App — matches landing page Easter palette */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --lavender:  #c084fc;
+  --pink:      #f472b6;
+  --coral:     #fb7185;
+  --peach:     #fb923c;
+  --gold:      #fbbf24;
+  --plum:      #7e22ce;
+  --deep:      #1e1035;
+  --muted:     #7c6b9e;
+  --easter:    linear-gradient(105deg, #ede9fe 0%, #fce7f3 28%, #ffe4cc 56%, #fef9c3 100%);
+  --vivid:     linear-gradient(105deg, #c084fc, #f472b6, #fb923c, #fbbf24);
+  --radius:    16px;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  background: var(--easter);
+  background-attachment: fixed;
+  color: var(--deep);
+  min-height: 100vh;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 32px;
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(24px);
+  border-bottom: 1.5px solid rgba(255,255,255,0.8);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.logo {
+  font-size: 1.3rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  background: var(--vivid);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stats {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.stat .val {
+  font-size: 1rem;
+  font-weight: 900;
+  color: var(--deep);
+}
+
+/* ── LAYOUT ── */
+.app-wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+/* ── LOAD SCREEN ── */
+.load-screen {
+  text-align: center;
+  padding: 80px 24px;
+}
+
+.load-screen h2 {
+  font-size: 1.6rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  margin-bottom: 8px;
+  color: var(--deep);
+}
+
+.load-screen p { font-size: 0.88rem; color: var(--muted); margin-bottom: 32px; }
+
+.progress-track {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto 12px;
+  height: 8px;
+  background: rgba(126,34,206,0.1);
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--vivid);
+  border-radius: 100px;
+  transition: width 0.3s;
+}
+
+.progress-label {
+  font-size: 0.75rem;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.device-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  background: rgba(255,255,255,0.75);
+  border: 1.5px solid rgba(192,132,252,0.3);
+  color: var(--plum);
+  padding: 5px 14px;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+/* ── SKILL BADGE ── */
+.skill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.75);
+  border: 1.5px solid rgba(192,132,252,0.3);
+  color: var(--plum);
+  padding: 5px 14px;
+  border-radius: 100px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+/* ── LESSON CARD ── */
+.lesson-card {
+  background: rgba(255,255,255,0.65);
+  backdrop-filter: blur(24px) saturate(180%);
+  border: 1.5px solid rgba(255,255,255,0.88);
+  border-radius: 22px;
+  padding: 36px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 24px rgba(126,34,206,0.07);
+}
+
+.lesson-prompt {
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.6;
+  color: var(--deep);
+  margin-bottom: 28px;
+  white-space: pre-wrap;
+}
+
+textarea {
+  width: 100%;
+  min-height: 140px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  border: 1.5px solid rgba(192,132,252,0.25);
+  background: rgba(255,255,255,0.8);
+  font-size: 0.98rem;
+  font-family: inherit;
+  color: var(--deep);
+  line-height: 1.65;
+  resize: vertical;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+
+textarea:focus {
+  border-color: rgba(244,114,182,0.5);
+  box-shadow: 0 0 0 3px rgba(244,114,182,0.12);
+}
+
+textarea::placeholder { color: rgba(126,34,206,0.3); }
+
+.submit-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border-radius: 100px;
+  font-weight: 800;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: none;
+  transition: all 0.22s;
+}
+
+.btn-primary {
+  background: var(--vivid);
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(244,114,182,0.4);
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(244,114,182,0.5);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-ghost {
+  background: rgba(255,255,255,0.6);
+  border: 1.5px solid rgba(192,132,252,0.25);
+  color: var(--plum);
+}
+
+.btn-ghost:hover {
+  background: rgba(255,255,255,0.9);
+  transform: translateY(-1px);
+}
+
+/* ── FEEDBACK CARD ── */
+.feedback-card {
+  background: linear-gradient(135deg, rgba(192,132,252,0.1), rgba(244,114,182,0.07));
+  border: 1.5px solid rgba(192,132,252,0.25);
+  border-radius: 18px;
+  padding: 28px;
+  margin-bottom: 24px;
+}
+
+.feedback-label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: var(--vivid);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 10px;
+}
+
+.feedback-text {
+  font-size: 0.95rem;
+  line-height: 1.72;
+  color: var(--deep);
+}
+
+/* ── XP TOAST ── */
+.xp-toast {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, rgba(251,146,60,0.15), rgba(251,191,36,0.15));
+  border: 1.5px solid rgba(251,146,60,0.3);
+  color: #c2410c;
+  padding: 10px 20px;
+  border-radius: 100px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  margin-top: 16px;
+  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+  from { transform: scale(0.7); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+/* ── EXAMPLES ── */
+.examples {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.example {
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 0.83rem;
+  line-height: 1.6;
+}
+
+.example.bad {
+  background: rgba(251,113,133,0.08);
+  border: 1.5px solid rgba(251,113,133,0.2);
+}
+
+.example.good {
+  background: rgba(244,114,182,0.08);
+  border: 1.5px solid rgba(244,114,182,0.2);
+}
+
+.example-label {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  color: var(--muted);
+}
+
+/* ── NEXT BUTTON ROW ── */
+.next-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+}
+
+/* ── THINKING DOTS ── */
+.thinking {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  padding: 20px 0;
+}
+
+.thinking span {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--lavender);
+  animation: blink 1.2s infinite;
+}
+
+.thinking span:nth-child(2) { animation-delay: 0.2s; background: var(--pink); }
+.thinking span:nth-child(3) { animation-delay: 0.4s; background: var(--peach); }
+
+@keyframes blink {
+  0%, 80%, 100% { transform: scale(1); opacity: 0.5; }
+  40% { transform: scale(1.4); opacity: 1; }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  .topbar { padding: 14px 16px; }
+  .stats { gap: 14px; }
+  .app-wrap { padding: 24px 16px 60px; }
+  .lesson-card { padding: 24px 20px; }
+  .examples { grid-template-columns: 1fr; }
+}

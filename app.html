@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ProseAI — Daily Lesson</title>
+  <link rel="stylesheet" href="./styles/app.css" />
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="logo">ProseAI</div>
+    <div class="stats">
+      <div class="stat">🔥 <span class="val" id="streak">0</span></div>
+      <div class="stat">⚡ <span class="val" id="xp">0</span> XP</div>
+      <div class="stat">📈 <span class="val" id="wscore">–</span></div>
+    </div>
+  </div>
+
+  <div class="app-wrap">
+
+    <!-- LOAD SCREEN -->
+    <div id="load-screen" class="load-screen">
+      <h2>Loading your AI coach...</h2>
+      <p>SmolLM2-360M runs fully in your browser — no server, no API key.<br/>
+         First load downloads ~200MB and caches it. Instant after that.</p>
+      <div class="progress-track">
+        <div class="progress-fill" id="load-bar" style="width:0%"></div>
+      </div>
+      <div class="progress-label" id="load-label">Starting...</div>
+      <div id="device-badge" class="device-badge" style="display:none;"></div>
+    </div>
+
+    <!-- LESSON VIEW (hidden until loaded) -->
+    <div id="lesson-view" style="display:none;">
+
+      <div class="lesson-card">
+        <div class="skill-badge" id="skill-badge">✍️ Skill</div>
+        <div class="lesson-prompt" id="lesson-prompt">Loading lesson...</div>
+        <textarea
+          id="user-input"
+          placeholder="Write your rewrite here..."
+          rows="5"
+        ></textarea>
+        <div class="submit-row">
+          <button class="btn btn-primary" id="submit-btn">Get Feedback →</button>
+        </div>
+      </div>
+
+      <!-- FEEDBACK (hidden until submitted) -->
+      <div id="feedback-wrap" style="display:none;">
+        <div class="feedback-card">
+          <div class="feedback-label">🤖 AI Feedback</div>
+          <div class="thinking" id="thinking">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="feedback-text" id="feedback-text" style="display:none;"></div>
+        </div>
+
+        <div id="xp-toast" class="xp-toast" style="display:none;"></div>
+
+        <div class="examples" id="examples" style="display:none;">
+          <div class="example bad">
+            <div class="example-label">⚠ Weak</div>
+            <div id="bad-example"></div>
+          </div>
+          <div class="example good">
+            <div class="example-label">✓ Strong</div>
+            <div id="good-example"></div>
+          </div>
+        </div>
+
+        <div class="next-row" id="next-row" style="display:none;">
+          <div style="font-size:0.8rem; color:var(--muted); font-weight:600;">
+            Free plan · 1 lesson/day
+          </div>
+          <button class="btn btn-ghost" id="next-btn">Next Lesson →</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script type="module" src="./src/ui.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./coi-serviceworker.js')
+        .then(() => { if (!crossOriginIsolated) location.reload() })
+    }
+  </script>
+</body>
+</html>

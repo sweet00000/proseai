@@ -1,0 +1,105 @@
+{
+  "_note": "Embeddings field is empty array [] — compute at first app run using all-MiniLM-L6-v2 and cache to localStorage",
+  "lessons": [
+    {
+      "id": "clarity-01",
+      "skill": "Clarity",
+      "difficulty": 1,
+      "prompt": "Rewrite this sentence to be clearer:\n\"I think it is basically true that the meeting was kind of not very productive.\"",
+      "bad_example": "I think it is basically true that the meeting was kind of not very productive.",
+      "good_example": "The meeting was unproductive.",
+      "tip": "Remove hedge words (basically, kind of, I think, sort of). State facts directly.",
+      "embedding": []
+    },
+    {
+      "id": "clarity-02",
+      "skill": "Clarity",
+      "difficulty": 1,
+      "prompt": "Rewrite to eliminate the passive voice:\n\"Mistakes were made and the deadline was missed by the team.\"",
+      "bad_example": "Mistakes were made and the deadline was missed by the team.",
+      "good_example": "The team made mistakes and missed the deadline.",
+      "tip": "Active voice puts the actor first. Find who did it and lead with them.",
+      "embedding": []
+    },
+    {
+      "id": "concise-01",
+      "skill": "Conciseness",
+      "difficulty": 1,
+      "prompt": "Cut this sentence by at least 40%:\n\"Due to the fact that we are currently in the process of evaluating a number of different potential options, we are not yet in a position to make a final decision at this point in time.\"",
+      "bad_example": "Due to the fact that we are currently in the process of evaluating a number of different potential options, we are not yet in a position to make a final decision at this point in time.",
+      "good_example": "We're still evaluating options and can't decide yet.",
+      "tip": "\"Due to the fact that\" = \"because\". \"At this point in time\" = \"now\" or cut entirely.",
+      "embedding": []
+    },
+    {
+      "id": "concise-02",
+      "skill": "Conciseness",
+      "difficulty": 2,
+      "prompt": "Rewrite this email opening more directly:\n\"I am writing to you today in order to follow up on the conversation that we had last week regarding the proposal that I sent over to you.\"",
+      "bad_example": "I am writing to you today in order to follow up on the conversation that we had last week regarding the proposal that I sent over to you.",
+      "good_example": "Following up on last week's proposal discussion.",
+      "tip": "Email openers can drop to one line. Cut \"I am writing to\" — you're already writing.",
+      "embedding": []
+    },
+    {
+      "id": "hook-01",
+      "skill": "Hooks",
+      "difficulty": 2,
+      "prompt": "Rewrite this opener to hook the reader immediately:\n\"In this essay I will be discussing the importance of sleep and how it affects productivity.\"",
+      "bad_example": "In this essay I will be discussing the importance of sleep and how it affects productivity.",
+      "good_example": "Sleeping 6 hours instead of 8 cuts your cognitive performance by 25% — and you won't notice.",
+      "tip": "Lead with the surprising fact or consequence, not a description of what you're about to say.",
+      "embedding": []
+    },
+    {
+      "id": "hook-02",
+      "skill": "Hooks",
+      "difficulty": 2,
+      "prompt": "Turn this weak opener into a strong first sentence:\n\"There are many reasons why remote work has become popular in recent years.\"",
+      "bad_example": "There are many reasons why remote work has become popular in recent years.",
+      "good_example": "Remote work didn't just survive the pandemic — it outlasted every prediction that it wouldn't.",
+      "tip": "\"There are many reasons\" is the weakest sentence structure in English. Lead with a claim or contrast instead.",
+      "embedding": []
+    },
+    {
+      "id": "tone-01",
+      "skill": "Tone",
+      "difficulty": 2,
+      "prompt": "Rewrite this feedback to sound direct but not harsh:\n\"This report is completely wrong and clearly shows you didn't understand the brief at all.\"",
+      "bad_example": "This report is completely wrong and clearly shows you didn't understand the brief at all.",
+      "good_example": "The report misses the brief — let's align on scope before the next draft.",
+      "tip": "Critique the work, not the person. Focus on the fix, not the failure.",
+      "embedding": []
+    },
+    {
+      "id": "tone-02",
+      "skill": "Tone",
+      "difficulty": 3,
+      "prompt": "Rewrite this overly formal sentence for a friendly Slack message:\n\"Please be advised that the aforementioned deliverable has been completed and is now ready for your review and subsequent approval.\"",
+      "bad_example": "Please be advised that the aforementioned deliverable has been completed and is now ready for your review and subsequent approval.",
+      "good_example": "Done! Ready for your review whenever you have a sec.",
+      "tip": "Match medium to message. Slack is conversational. Legal language in a chat reads as cold or passive-aggressive.",
+      "embedding": []
+    },
+    {
+      "id": "structure-01",
+      "skill": "Structure",
+      "difficulty": 3,
+      "prompt": "Add a clear structure to this rambling paragraph:\n\"We need to fix the onboarding. New users get confused. Also the pricing page is unclear. The support team says most tickets are about billing. Maybe we should look at the docs too. The homepage converts well though.\"",
+      "bad_example": "We need to fix the onboarding. New users get confused. Also the pricing page is unclear. The support team says most tickets are about billing. Maybe we should look at the docs too. The homepage converts well though.",
+      "good_example": "Three problems to fix: (1) Onboarding — new users get confused. (2) Pricing page — unclear, drives most support tickets. (3) Docs — need review. Note: homepage conversion is solid, leave it alone.",
+      "tip": "When you have a list of issues, number them. Your reader's brain will organize information faster with explicit structure.",
+      "embedding": []
+    },
+    {
+      "id": "precision-01",
+      "skill": "Word Precision",
+      "difficulty": 2,
+      "prompt": "Replace the vague words with specific ones:\n\"The results were very good and we saw a lot of improvement in a bunch of areas.\"",
+      "bad_example": "The results were very good and we saw a lot of improvement in a bunch of areas.",
+      "good_example": "Revenue grew 18% and support tickets dropped by half.",
+      "tip": "\"Very good\" = give the number. \"A lot\" = give the amount. \"A bunch of areas\" = name the areas. Vague words hide your thinking.",
+      "embedding": []
+    }
+  ]
+}
